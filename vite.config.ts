@@ -6,5 +6,9 @@ export default defineConfig({
   base: './',
   build: {
     outDir: 'build'
+  },
+  server: {
+    host: true, // allow external connections (needed for ngrok)
+    allowedHosts: true // accept requests from any domain (like ngrok)
   }
 });
