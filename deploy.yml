@@ -1,25 +1,39 @@
-name: Build and Deploy
+name: Deploy Vite App (PNPM) to GitHub Pages
 
 on:
   push:
     branches:
-      - main
+      - main  # Deploy whenever you push to main
+
+permissions:
+  contents: write  # Needed to push to gh-pages
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          version: 9
+          node-version: 18  # or 20 if your project needs it
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9  # you can change to your pnpm version
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Build project
-        run: pnpm build
+        run: pnpm run build
+
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./build
